@@ -1,0 +1,7 @@
+Requirements:
+1. Python Libraries:(replace pip3 with pip and vice versa if it does not work)
+	a. pytorch: pip3 install torch torchvision torchaudio 
+	b. opencv: pip install opencv-contrib-python
+	c. fastapi: pip install fastapi
+	d. uvicorn: pip install "uvicorn[standard]"
+2. To run the file in terminal write : uvicorn index:app --reload

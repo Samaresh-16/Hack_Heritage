@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ML App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<!-- --------------------------------------Code for NavBar ----------------------------------------------------------------------->
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="static/download.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    ML App
+  </a>
+</nav>
+
+<div class="container justify-content-center align-items-center">
+  <div class="card" style="width: 18rem;">
+    <!-- <div class="mb-3">
+      <label for="formFile" class="form-label justify-content-center align-items-center">Upload your image</label>
+      <input class="form-control" type="file" id="formFile">
+    </div> -->
+    <form method="post" action="/" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="formFile" class="form-label justify-content-center align-items-center">Upload your image</label>
+        <input class="form-control" type="file" name="file" id="formFile">
+      </div>
+      {%if uploaded%}
+      <img id="prev" class="card-img-top" src="{{uploaded}}" alt="Card image cap">
+      {%endif%}
+      <img id="preview" class="card-img-top" style="display: none;" src="" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">Uploaded Image</h5>
+        <button class="btn btn-primary" type="submit" id="pred">Predict</button>
+        <button class="btn btn-primary" type="button" id="loading-button" style="display: none;" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+      </div>
+    </form>
+    <div class="card-footer">
+      <p>{{emotion}}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const preview = document.getElementById('preview');
+  const upload = document.getElementById('formFile');
+  upload.addEventListener('change', () => {
+    console.log("uploaded");
+  // const form = document.getElementById('updt');
+  //   if(form){
+  //       console.log("Form found");
+  //   }
+  //   else{
+  //       console.log("Form not found");
+  //   }
+  if (preview.style.display === 'none') {
+    //this SHOWS the preview
+    preview.style.display = 'block';
+  } 
+});
+</script>
+<script>
+  const formFile = document.getElementById('formFile');
+  const img = document.getElementById('preview');
+  formFile.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      img.src = reader.result;
+    };
+  });
+</script>
+
+<script>
+  // const formFile = document.getElementById('formFile');
+  // const img = document.getElementById('preview');
+  const predictButton = document.getElementById('pred');
+  const loadingButton = document.getElementById('loading-button');
+  const uploadForm = document.querySelector('form');
+
+  predictButton.addEventListener('click', async () => {
+    const file = formFile.files[0];
+    if (!file) {
+      alert('Please select an image to upload.');
+      return;
+    }
+
+    // Show the loading button and hide the "Predict" button
+    loadingButton.style.display = 'inline-block';
+    predictButton.style.display = 'none';
+
+    // Create a FormData object to send the file
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Handle the successful response here
+        // For example, you can display the result or update the UI accordingly
+        // ...
+      } else {
+        alert('Error uploading the image. Please try again.');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      // Hide the loading button and show the "Predict" button
+      loadingButton.style.display = 'none';
+      predictButton.style.display = 'inline-block';
+
+      // You can reset the form if needed
+      uploadForm.reset();
+    }
+  });
+</script>
+</body>
+</html>
