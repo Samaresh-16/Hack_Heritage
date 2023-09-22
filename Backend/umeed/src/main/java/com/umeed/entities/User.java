@@ -61,6 +61,12 @@ public class User implements UserDetails {
 	@Column(nullable=false)
 	private String userGender;
 	
+	@OneToMany(mappedBy = "postUser", cascade = CascadeType.ALL)
+	private List<Post> userPosts=new ArrayList<>();
+	
+	@OneToMany(mappedBy = "commentUser", cascade = CascadeType.ALL)
+	private Set<Comment> comments=new HashSet<>();
+	
 
 	@Override
 	public String getPassword() {
