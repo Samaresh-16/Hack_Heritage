@@ -89,6 +89,7 @@ public class AuthController {
 		
 		UserDto registeredUser = this.userServices.registerUser(userDto);
 		
+		//login part
 		UserDetails userDetails=this.userDetailsService.loadUserByUsername(userDto.getUserEmail());
 		
 		String token=this.jwtTokenHelper.generateToken(userDetails);

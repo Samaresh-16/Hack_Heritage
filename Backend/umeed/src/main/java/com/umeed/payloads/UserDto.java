@@ -34,6 +34,9 @@ public class UserDto {
 	@Size(min=5, message="The password of user must be of more than 5 characters")
 	private String userPassword;
 	
+	@NotEmpty(message="The user must identify his/her gender or choose others...")
+	private String userGender;
+	
 	public String userAbout;
 	
 	//private Set<CommentDto> comments=new HashSet<>();
