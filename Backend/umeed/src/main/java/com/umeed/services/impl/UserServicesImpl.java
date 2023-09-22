@@ -56,7 +56,7 @@ public class UserServicesImpl implements UserServices {
 	@Override
 	public void deleteUserById(Integer userId) {
 		
-		User user=this.userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "Id", userId));
+		User user=this.userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "Id ", userId));
 		 
 		this.userRepository.delete(user);
 
@@ -71,6 +71,7 @@ public class UserServicesImpl implements UserServices {
 		 databaseUser.setUserEmail(userDto.getUserEmail());
 		 databaseUser.setUserPassword(this.passwordEncoder.encode(userDto.getUserPassword()));
 		 databaseUser.setUserAbout(userDto.getUserAbout());
+		 databaseUser.setUserGender(userDto.getUserGender());
 		 
 		 this.userRepository.save(databaseUser);
 		

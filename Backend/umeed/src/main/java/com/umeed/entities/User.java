@@ -58,6 +58,9 @@ public class User implements UserDetails {
 	@Column(nullable=true)
 	private String userAbout;
 	
+	@Column(nullable=false)
+	private String userGender;
+	
 
 	@Override
 	public String getPassword() {
