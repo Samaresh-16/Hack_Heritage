@@ -45,25 +45,33 @@ def Sw(s1, s2, s3, s4):
 #     elif 56 <= score <= 64:
 #         print("Almost always")
 
+def interprete_subscale():
+    i =list(map(int, input().split())) 
 
-i =list(map(int, input().split())) 
+    JLS = jl(i[0], i[4], i[8], i[12])
+    SCS = Sc(i[1], i[5], i[9], i[13])
+    EPS = Ep(i[2], i[6], i[10], i[14])
+    AES = Ae(i[3], i[7], i[11], i[15])
+    SWS = Sw(JLS, SCS, EPS, AES)
+    res= {"JLS":JLS, "SCS":SCS, "EPS":EPS,"AES": AES}
+    weak_zones=[]
+    for i in res:
+        if res[i] <= 7:
+            weak_zones.append(i)
 
-JLS = jl(i[0], i[4], i[8], i[12])
-SCS = Sc(i[1], i[5], i[9], i[13])
-EPS = Ep(i[2], i[6], i[10], i[14])
-AES = Ae(i[3], i[7], i[11], i[15])
-SWS = Sw(JLS, SCS, EPS, AES)
-res= {"JLS":JLS, "SCS":SCS, "EPS":EPS,"AES": AES}
-weak_zones=[]
-for i in res:
-    if res[i] <= 7:
-        weak_zones.append(i)
+    #Recommend games and activities to improve the weak zones
+    # print("Total score: ", SWS)
+    # if(len(weak_zones)==0):
+    #     print("You are doing great!")
+    #     res = sorted(res)
+    #     print("You can work on: ", res[0])
+    # else:
+    #     print("Your weak zones are: ", weak_zones)
 
-#Recommend games and activities to improve the weak zones
-print("Total score: ", SWS)
-if(len(weak_zones)==0):
-    print("You are doing great!")
-    res = sorted(res)
-    print("You can work on: ", res[0])
-else:
-    print("Your weak zones are: ", weak_zones)
+    scaling_factor=100-(64-SWS)
+    print(SWS)
+    # print(scaling_factor) 
+    return scaling_factor
+
+score=interprete_subscale()
+print(score)
