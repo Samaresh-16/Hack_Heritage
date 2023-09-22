@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
         axios.request(config)
             .then((response) => {
-                console.log(response.data.list);
+                // console.log(response.data.list);
                 setPosts(response.data.list);
             })
             .catch((error) => {
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
         axios.request(config)
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 setUser(response.data);
             })
             .catch((error) => {
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
                 "Content-Type": "application/json",
                 // Authorization: ,
             });
-            console.log(res.data.token);
+            // console.log(res.data.token);
             setUserToken(res.data.token);
             // console.log("login fn userToken value: " + userToken);
             await AsyncStorage.setItem('userToken', `${res.data.token}`);

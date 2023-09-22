@@ -1,15 +1,56 @@
-import { StyleSheet, Text, View, Image, ScrollView, RefreshControl, TextInput } from 'react-native'
+import { StyleSheet, Text, View, Image, ScrollView, RefreshControl, TextInput, Pressable, ToastAndroid } from 'react-native'
 import React, { useContext, useState } from 'react'
 import GlobalStyle from '../style/style'
 import { AuthContext } from '../context/AuthContext'
 import Post from '../components/post'
+import CheckBox from 'expo-checkbox';
+import axios from 'axios'
+import { BASE_URL } from '../config'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 const Community = () => {
 
-    const { posts, getPost } = useContext(AuthContext);
+    const { posts, getPost, user } = useContext(AuthContext);
     const [refreshing, setRefreshing] = useState(false);
+    const [toggleCheckBox, setToggleCheckBox] = useState(false);
+    const [postText, setPostText] = useState('');
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+
+
+
+    const postSubmitHandler = async () => {
+        setButtonDisabled(true);
+
+        if (postText === '') {
+            ToastAndroid.show("Please enter valid text", ToastAndroid.SHORT);
+            setButtonDisabled(false);
+            return;
+        }
+        try {
+            // console.log(user);
+            const userToken2 = await AsyncStorage.getItem('userToken');
+            await axios.post(`http://${BASE_URL}/apis/create_post/user_id/${user.userId}`, {
+                "postContent": postText,
+                "isAnoynomous": toggleCheckBox
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${userToken2}`
+                }
+            })
+            ToastAndroid.show("post added successfully", ToastAndroid.SHORT);
+            getPost(true);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setPostText('');
+
+        setButtonDisabled(false);
+        setToggleCheckBox(false);
+
+    }
 
     return (
         <View style={[GlobalStyle.container, styles.container]}>
@@ -27,7 +68,36 @@ const Community = () => {
             </ScrollView>
             <View style={styles.addpost}>
 
-                <View><TextInput placeholder='hey champ? how are you feeling ? ' /></View>
+                <View style={styles.postinput}>
+                    <TextInput multiline placeholder='hey champ? how are you feeling ? ' value={postText} style={styles.input} onChangeText={(value) => {
+                        setPostText(value);
+                        // console.log(postText);
+                    }} />
+                    <Pressable
+                        style={
+                            styles.button
+                        }
+                        android_ripple={{ color: '#115351', borderless: false }}
+                        onPress={postSubmitHandler}
+                        disabled={buttonDisabled}
+                    >
+                        <Image source={require('../assets/rightArrow.png')} style={{
+                            resizeMode: 'contain',
+                            height: 30
+                        }} />
+                    </Pressable>
+                </View>
+                <View style={styles.postAnonymously}>
+                    <CheckBox
+                        disabled={false}
+                        value={toggleCheckBox}
+                        onValueChange={(newValue) => setToggleCheckBox(newValue)}
+                    />
+                    <Text style={{
+                        color: '#ffffff7f',
+                        marginLeft: 10
+                    }}>Post anonymously</Text>
+                </View>
 
 
             </View>
@@ -100,6 +170,38 @@ const styles = StyleSheet.create({
         width: 40
     },
     addpost: {
-
+        paddingTop: 20,
+        paddingBottom: 20
+    },
+    postAnonymously: {
+        // flex: 1,
+        flexDirection: 'row',
+        gap: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    postinput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 15
+    },
+    input: {
+        backgroundColor: "#ffffff4f",
+        paddingLeft: 20,
+        paddingRight: 20,
+        borderBottomLeftRadius: 8,
+        borderTopLeftRadius: 8,
+        width: '80%',
+        height: 60
+    },
+    button: {
+        backgroundColor: '#35a29f',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '15%',
+        height: 60,
+        borderBottomRightRadius: 8,
+        borderTopRightRadius: 8
     }
 })
