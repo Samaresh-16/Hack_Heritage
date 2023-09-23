@@ -40,6 +40,7 @@ public class UserServicesImpl implements UserServices {
 		User user=this.modelMapper.map(userDto, User.class);
 		
 		user.setUserPassword(this.passwordEncoder.encode(user.getUserPassword()));
+		user.setUserScore(-1);
 		
 		
 		try {
@@ -70,7 +71,7 @@ public class UserServicesImpl implements UserServices {
 		 databaseUser.setUserFullName(userDto.getUserFullName());
 		 databaseUser.setUserEmail(userDto.getUserEmail());
 		 databaseUser.setUserPassword(this.passwordEncoder.encode(userDto.getUserPassword()));
-		 databaseUser.setUserAbout(userDto.getUserAbout());
+		 databaseUser.setUserScore(userDto.getUserScore());
 		 databaseUser.setUserGender(userDto.getUserGender());
 		 
 		 this.userRepository.save(databaseUser);
