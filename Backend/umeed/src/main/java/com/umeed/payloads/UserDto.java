@@ -37,7 +37,9 @@ public class UserDto {
 	@NotEmpty(message="The user must identify his/her gender or choose others...")
 	private String userGender;
 	
-	public String userAbout;
+	//private Integer userScore;
+	
+	public Integer userScore;
 	
 	//private Set<CommentDto> comments=new HashSet<>();
 

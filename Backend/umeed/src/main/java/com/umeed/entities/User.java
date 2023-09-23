@@ -55,11 +55,14 @@ public class User implements UserDetails {
 	@Column(nullable=false)
 	private String userPassword;
 	
-	@Column(nullable=true)
-	private String userAbout;
+	@Column(name="user_score")
+	private Integer userScore;
 	
 	@Column(nullable=false)
 	private String userGender;
+	
+//	@Column(name="user_score")
+//	private Integer userScore;
 	
 	@OneToMany(mappedBy = "postUser", cascade = CascadeType.ALL)
 	private List<Post> userPosts=new ArrayList<>();
