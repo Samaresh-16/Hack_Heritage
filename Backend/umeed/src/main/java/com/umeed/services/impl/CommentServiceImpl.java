@@ -1,6 +1,8 @@
 package com.umeed.services.impl;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,16 @@ public class CommentServiceImpl implements CommentService {
 		return this.modelMapper.map(returnedComment, CommentDto.class);
 		
 	}
+
+	@Override
+	public List<CommentDto> getAllCommentByPostId(Integer postId) {
+		
+		Post post=this.postRepository.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "Id ", postId));
+		List<Comment> listComment=this.commentRepository.findBycommentPost(post);
+		List<CommentDto> listCommentDto=listComment.stream().map(comment->this.modelMapper.map(comment, CommentDto.class)).collect(Collectors.toList());
+		return listCommentDto;
+	}
+	
+	
 
 }
