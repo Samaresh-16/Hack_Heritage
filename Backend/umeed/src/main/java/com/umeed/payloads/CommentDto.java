@@ -21,7 +21,7 @@ public class CommentDto {
 	
 	private Date commentDate;
 	
-	//private UserDto commentUser;
+	private UserDto commentUser;
 	
 	
 }

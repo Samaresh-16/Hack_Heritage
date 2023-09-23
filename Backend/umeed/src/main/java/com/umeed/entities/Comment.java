@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -32,9 +33,11 @@ public class Comment {
 	private Date commentDate;
 	
 	@ManyToOne
+	@JoinColumn(name="user_id")
 	private User commentUser;
 	
 	@ManyToOne
+	@JoinColumn(name="post_id")
 	private Post commentPost;
 
 }
