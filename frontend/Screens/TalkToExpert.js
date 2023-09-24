@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import GlobalStyle from '../style/style'
 
 const TalkToExpert = ({ navigator }) => {
     return (
-        <View style={styles.container}>
-            <Text>Talk to expert</Text>
+        <View style={[GlobalStyle.container, styles.container]}>
+            <Text style={[GlobalStyle.text]}>Talk to expert</Text>
         </View>
     )
 }

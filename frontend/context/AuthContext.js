@@ -12,6 +12,27 @@ export const AuthProvider = ({ children }) => {
     const [userToken, setUserToken] = useState(null);
     const [user, setUser] = useState({});
     const [posts, setPosts] = useState([]);
+    const [score, setScore] = useState(10);
+    const [steps, setSteps] = useState([]);
+    const [mood, setMood] = useState();
+
+    const getSteps = async () => {
+        let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `http://${BASE_URL}/apis/steps`,
+        };
+
+        axios.request(config)
+            .then((response) => {
+                // console.log(response.data);
+                setSteps(response.data);
+            })
+            .catch((error) => {
+                console.log("get steps error " + error);
+            });
+
+    }
 
 
     const getPost = async (manualRefresh) => {
@@ -56,6 +77,8 @@ export const AuthProvider = ({ children }) => {
             .then((response) => {
                 // console.log(response.data);
                 setUser(response.data);
+                // uncomment it
+                setScore(response.data.userScore);
             })
             .catch((error) => {
                 console.log("get user info error " + error);
@@ -144,6 +167,7 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn();
         // console.log(userToken);
         getPost(false);
+        getSteps();
     }, [userToken, user])
 
     useEffect(() => {
@@ -152,7 +176,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ login, logout, isLoading, userToken, register, getCurrentUser, user, posts, getPost }}>
+        <AuthContext.Provider value={{ login, logout, isLoading, userToken, register, getCurrentUser, user, posts, getPost, steps, score, setMood, mood, setScore }}>
             {children}
         </AuthContext.Provider>
     )

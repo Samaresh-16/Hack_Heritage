@@ -6,10 +6,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StepsToTake from './StepsToTake';
 import TalkToExpert from './TalkToExpert';
+import ScoringStack from '../navigations/ScoringStack';
 
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
+
+    const { score } = useContext(AuthContext);
+
+    if (score === -1) return (
+        <ScoringStack />
+    )
+
     return (
         <NavigationContainer independent={true}>
             <Stack.Navigator screenOptions={{
@@ -24,7 +32,7 @@ const HomeStack = () => {
 }
 
 const Home = ({ navigation }) => {
-    const { logout, user } = useContext(AuthContext);
+    const { logout, user, score } = useContext(AuthContext);
     // getCurrentUser();
 
 
@@ -44,8 +52,17 @@ const Home = ({ navigation }) => {
                 <ScrollView style={style.scrollview} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', gap: 20, borderWidth: 0, borderColor: '#f00', height: '100%' }}>
                     {/* <Text style={[style.title, GlobalStyle.text]}>Home</Text> */}
                     <Text style={GlobalStyle.text}>{user.userFullName}</Text>
-                    <View style={style.card}>
-                        <Image source={require('../assets/scorecard.png')} style={style.cardImg} />
+                    <View style={[style.card, { alignItems: 'center', justifyContent: 'center' }]} >
+                        <Image source={require('../assets/scoreBg.png')} style={style.cardImg} />
+                        <View style={style.scorecard}>
+                            <View style={style.scoreAndEmoji}>
+                                <View style={style.scoreText}>
+                                    <Text style={style.subheading}>{(score === -1) ? 'Help us understand you better' : 'Your score is'}</Text>
+                                    <Text style={[style.scoreHeading, { color: (score > 91) ? '#68D60D' : (score > 75) ? '#EDCB23' : (score > 59) ? '#ff6b6c' : '#D70419', }]}>{(score === -1) ? 'Take test' : `${score}%`}</Text>
+                                </View>
+                                {(score > 84) ? <Image source={require('../assets/happy.png')} style={style.emoji} /> : (score >= 70) ? <Image source={require('../assets/moderateHappy.png')} style={style.emoji} /> : (score > 28) ? <Image source={require("../assets/moderateSad.png")} style={style.emoji} /> : (score !== -1) ? <Image source={require("../assets/sad.png")} style={style.emoji} /> : <Text></Text>}
+                            </View>
+                        </View>
                     </View>
                     <View style={style.card}>
                         <Pressable onPress={() => { navigation.navigate('steps') }}>
@@ -90,6 +107,12 @@ const style = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10
     },
+    scorecard: {
+        zIndex: 100,
+        position: 'absolute',
+        width: '100%',
+
+    },
     propic: {
         // resizeMode: 'center',
         height: '100%',
@@ -102,13 +125,13 @@ const style = StyleSheet.create({
         height: "25%",
         width: '90%',
         borderRadius: 16,
-        overflow: 'hidden'
+        overflow: 'hidden',
         // alignContent: 'center',
     },
     cardImg: {
         resizeMode: 'cover',
         height: '100%',
-        width: "100%"
+        width: "100%",
     },
     headerleft: {
         // borderWidth: 10,
@@ -161,5 +184,27 @@ const style = StyleSheet.create({
     headericon: {
         resizeMode: 'contain',
         width: 40
+    },
+    scoreAndEmoji: {
+        flexDirection: 'row',
+        width: "100%",
+        // borderWidth: 2,
+        justifyContent: 'space-between',
+        padding: 7
+    },
+    emoji: {
+        resizeMode: "contain",
+        height: 80,
+    },
+    subheading: {
+        color: '#ffffff7f',
+        fontSize: 20
+    },
+    scoreHeading: {
+
+        fontSize: 40
+    },
+    scoreText: {
+        marginLeft: 20
     }
 })
